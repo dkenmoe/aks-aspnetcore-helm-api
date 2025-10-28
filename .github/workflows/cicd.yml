@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 env:
-  IMAGE_NAME: myapi
+  IMAGE_NAME: MyTestApi
   ACR_LOGIN_SERVER: ${{ secrets.AZURE_CONTAINER_REGISTRY }}
   AKS_RG: ${{ secrets.AKS_RESOURCE_GROUP }}
   AKS_NAME: ${{ secrets.AKS_CLUSTER_NAME }}
@@ -24,7 +24,7 @@ jobs:
           dotnet-version: "8.0.x"
 
       - name: Restore & Build
-        working-directory: MyApi
+        working-directory: MyTestApi
         run: |
           dotnet restore
           dotnet build --configuration Release --no-restore
@@ -47,7 +47,7 @@ jobs:
       - name: Build & Push image
         run: |
           IMAGE_TAG=${{ github.sha }}
-          docker build -t $ACR_LOGIN_SERVER/$IMAGE_NAME:$IMAGE_TAG ./MyApi
+          docker build -t $ACR_LOGIN_SERVER/$IMAGE_NAME:$IMAGE_TAG ./MyTestApi
           docker push $ACR_LOGIN_SERVER/$IMAGE_NAME:$IMAGE_TAG
         shell: bash
 
@@ -62,8 +62,8 @@ jobs:
 
       - name: Helm upgrade/install
         run: |
-          RELEASE=myapi
-          CHART=MyApi/charts/myapi
+          RELEASE=MyTestApi
+          CHART=MyTestApi/charts/MyTestApi
           IMAGE_TAG=${{ github.sha }}
 
           helm upgrade --install $RELEASE $CHART \
