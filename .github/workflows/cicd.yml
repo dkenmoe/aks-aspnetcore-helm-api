@@ -24,7 +24,7 @@ jobs:
           dotnet-version: "8.0.x"
 
       - name: Restore & Build
-        working-directory: MyTestApi
+        #working-directory: MyTestApi
         run: |
           dotnet restore
           dotnet build --configuration Release --no-restore
