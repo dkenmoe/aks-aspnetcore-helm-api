@@ -60,7 +60,7 @@ jobs:
       - name: Helm upgrade/install
         run: |
           RELEASE=MyTestApi
-          CHART=MyTestApi/charts/MyTestApi
+          CHART=MyTestApi/charts/myapi
           IMAGE_TAG=${{ github.sha }}
 
           helm upgrade --install $RELEASE $CHART \
