@@ -44,7 +44,7 @@ jobs:
       - name: Build & Push image
         run: |
           IMAGE_TAG=${{ github.sha }}
-          docker build -t $ACR_LOGIN_SERVER/$IMAGE_NAME:$IMAGE_TAG ./MyTestApi
+          docker build -t $ACR_LOGIN_SERVER/$IMAGE_NAME:$IMAGE_TAG .
           docker push $ACR_LOGIN_SERVER/$IMAGE_NAME:$IMAGE_TAG
         shell: bash
 
