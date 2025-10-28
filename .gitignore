@@ -1,0 +1,80 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.sln.docstates
+*.csproj.user
+*.resharper
+*.suo
+_ReSharper.*/
+*.[Ee]xternal[Ss]ources/
+**/*.dotsettings
+**/*.dotsettings.user
+
+# Build and Test Output
+[Bb]in/
+[Oo]bj/
+[Tt]emp/
+[Dd]ebug/
+[Rr]elease/
+*.dll
+*.exe
+*.pdb
+*.tmp
+*.bak
+*.obj
+*.cache
+*.ncb
+*.sbr
+*.map
+*.tlb
+*.tlh
+*.log
+*.lst
+*.vspscc
+*.vssscc
+*.builds
+*.opendb
+*.safetymap
+
+# Packages and Dependencies
+**/packages/
+**/node_modules/
+**/bower_components/
+*.nupkg
+*.snupkg
+
+# IDE Specific Files
+# VS Code
+.vscode/
+
+# Rider
+.idea/
+
+# DotNet Core
+# SDK/Tools temporary assets
+.assetid/
+.tool/
+
+# Test results
+TestResults/
+*.trx
+
+# Runtime configuration files that may contain secrets or specific server details
+# You should manage secrets securely, but generally keep these out of source control.
+appsettings.Development.json
+appsettings.Staging.json
+appsettings.Production.json
+web.config
+app.config
+
+# Publishing/Deployment files
+**/*.pubxml
+*.zip
+*.rar
+*.tar
+*.gz
+/wwwroot/
+
+# Any other files that are generated during development
+**/Thumbs.db
