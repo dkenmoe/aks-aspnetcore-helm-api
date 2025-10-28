@@ -1,0 +1,72 @@
+name: Build & Deploy to AKS
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+env:
+  IMAGE_NAME: myapi
+  ACR_LOGIN_SERVER: ${{ secrets.AZURE_CONTAINER_REGISTRY }}
+  AKS_RG: ${{ secrets.AKS_RESOURCE_GROUP }}
+  AKS_NAME: ${{ secrets.AKS_CLUSTER_NAME }}
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Restore & Build
+        working-directory: MyApi
+        run: |
+          dotnet restore
+          dotnet build --configuration Release --no-restore
+
+      - name: Run tests (none by default)
+        if: false
+        run: echo "Add tests later"
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Docker login to ACR
+        uses: azure/docker-login@v2
+        with:
+          login-server: ${{ env.ACR_LOGIN_SERVER }}
+          # azure/docker-login récupère les creds via azure/login
+
+      - name: Build & Push image
+        run: |
+          IMAGE_TAG=${{ github.sha }}
+          docker build -t $ACR_LOGIN_SERVER/$IMAGE_NAME:$IMAGE_TAG ./MyApi
+          docker push $ACR_LOGIN_SERVER/$IMAGE_NAME:$IMAGE_TAG
+        shell: bash
+
+      - name: Get AKS context
+        uses: azure/aks-set-context@v4
+        with:
+          resource-group: ${{ env.AKS_RG }}
+          cluster-name: ${{ env.AKS_NAME }}
+
+      - name: Setup Helm
+        uses: azure/setup-helm@v4
+
+      - name: Helm upgrade/install
+        run: |
+          RELEASE=myapi
+          CHART=MyApi/charts/myapi
+          IMAGE_TAG=${{ github.sha }}
+
+          helm upgrade --install $RELEASE $CHART \
+            --set image.repository=$ACR_LOGIN_SERVER/$IMAGE_NAME \
+            --set image.tag=$IMAGE_TAG \
+            --set service.type=LoadBalancer
